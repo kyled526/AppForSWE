@@ -58,11 +58,15 @@ function create(form) {
       }
    }
    else {
-      users[userCount] = createUser(firstName, lastName, displayName, password, email, userCount);
+      createUser(firstName, lastName, displayName, password, email, userCount);
       printUsers();
       window.open("file:/Users/Adam/Documents/GitHub/AppForSWE/feedLogin.html");
      
    }
+}
+
+function getUsers() {
+   return users;
 }
 
 function getCount() {
@@ -74,7 +78,7 @@ function setCount(x) {
 }
 
 function reset() {
-   index.setCount(0);    
+   setCount(0);    
 }
 
 function printUsers() {
@@ -84,14 +88,14 @@ function printUsers() {
    }
 }
 
-function createUser(firstName, lastName, displayName, password, email, count) {
+function createUser(firstName, lastName, displayName, password, email) {
     var person = {
          first: firstName,
          last : lastName,
          dispName : displayName,
          pass     : password,
          mail     : email,
-         id       : count,
+         id       : userCount,
          fullName : function() {
          return this.first + " " + this.last;
          },
@@ -105,8 +109,9 @@ function createUser(firstName, lastName, displayName, password, email, count) {
             return this.dispName;
          }
       };
-   userCount++;
-   return person;
+   this.getUsers()[userCount++] = person;
+   
+   //return person;
 }
 
 function validateEmail(x) {
@@ -118,8 +123,9 @@ function validateEmail(x) {
       }
    }
     //Make sure it is not a repeat email
-    for (i = 0; i < userCount; i++) {
-      if (users[i].email == x) {
+   for (i = 0; i < userCount; i++) {
+      //console.log(getUsers()[i].mail + " vs " + x);
+      if (users[i].mail == x) {
          return false;
       }
    }
@@ -131,10 +137,9 @@ function validatePassword(x) {
 }
 
 function validateUser(x, y) {
-   console.log(userCount);
    for (i = 0; i < userCount; i++) {
       if (users[i].dispName == x && users[i].pass == y) {
-         console.log("Valid user")
+         //console.log("Valid user")
          return true;
       }
    }
@@ -148,7 +153,8 @@ function validateUser(x, y) {
  }
  
  module.exports = {
-   getCount: getCount,
+   getUsers : getUsers, 
+   getCount : getCount,
    setCount : setCount,
    reset : reset,
    users : users,
